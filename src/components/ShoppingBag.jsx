@@ -115,7 +115,7 @@ export default function ShoppingBag({ cart, setCart, isOpen, onClose }) {
               <span className="text-sm font-bold text-gray-900">Subtotal:</span>
               <span className="text-pink-600 font-extrabold text-base">${subtotal.toFixed(2)}</span>
             </div>
-            <p className="text-[11px] text-gray-400 font-medium">Delivery fee ($1.50) will be calculated at checkout.</p>
+            <p className="text-[11px] text-gray-400 font-medium">Delivery fee ($1.50) will included.</p>
             
             <button 
               onClick={() => {

@@ -81,7 +81,6 @@ export default function LoginPage() {
     setShowMapModal(false);
   };
 
-  // Handler to enforce the +885 prefix requirement
   const handlePhoneChange = (e) => {
     const input = e.target.value;
     // Ensure it always starts with '+885 '
@@ -171,7 +170,7 @@ export default function LoginPage() {
                 id="fullName"
                 name="fullName"
                 type="text"
-                placeholder="Jane Doe"
+                placeholder="Enter your name"
                 value={fullName}
                 disabled={loading}
                 onChange={(e) => setFullName(e.target.value)}
@@ -249,7 +248,7 @@ export default function LoginPage() {
                   id="phone"
                   name="phone"
                   type="tel"
-                  placeholder="+885 15 479 408"
+                  placeholder="+885 XX XXX XXX"
                   value={phone}
                   disabled={loading}
                   onChange={handlePhoneChange}
@@ -354,7 +353,6 @@ export default function LoginPage() {
                 disabled={isLocating}
                 className="px-3 py-1.5 rounded-lg bg-pink-600 text-white text-xs font-bold hover:bg-pink-700 transition disabled:bg-gray-400 shadow-sm whitespace-nowrap flex items-center gap-1.5"
               >
-                <span>📍</span>
                 <span>{isLocating ? "Detecting GPS..." : "Catch My GPS"}</span>
               </button>
             </div>
@@ -372,7 +370,7 @@ export default function LoginPage() {
 
               <div className="absolute inset-0 pointer-events-none flex items-center justify-center pb-6">
                 <div className="text-3xl filter drop-shadow-md animate-bounce">
-                  📍
+                  <span>&#xf3c5;</span>
                 </div>
               </div>
             </div>

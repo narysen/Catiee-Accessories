@@ -158,7 +158,15 @@ export default function Cart({ cart, setCart, user }) {
             <div className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center text-sm font-bold ${
               modal.type === 'error' ? 'bg-red-50 text-red-500' : 'bg-pink-50 text-pink-500'
             }`}>
-              {modal.type === 'error' ? '✕' : '✓'}
+              {modal.type === 'error' ? (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              )}
             </div>
             <h3 className="text-sm font-bold text-gray-900">{modal.title}</h3>
             <p className="text-xs text-gray-500">{modal.message}</p>
@@ -230,7 +238,7 @@ export default function Cart({ cart, setCart, user }) {
                         value={phone} 
                         onChange={(e) => setPhone(e.target.value)}
                         className="w-full bg-white border border-gray-200 px-3 py-2 rounded-xl text-xs focus:outline-none focus:border-pink-500"
-                        placeholder="+855 12 345 678"
+                        placeholder="+855 XX XXX XXX"
                       />
                     </div>
                   </div>
@@ -269,10 +277,16 @@ export default function Cart({ cart, setCart, user }) {
                     if (typeof rawPrice === 'string') rawPrice = parseFloat(rawPrice.replace(/[^0-9.-]+/g, ""));
                     const itemSubtotal = (isNaN(rawPrice) ? 0 : rawPrice * qty).toFixed(2);
 
+                    // Image path handling safety matching your other updates
+                    const rawImage = item.img || item.image;
+                    const imageSrc = rawImage?.startsWith('http')
+                      ? rawImage
+                      : `${import.meta.env.BASE_URL}${rawImage?.startsWith('Image/') ? rawImage : `Image/${rawImage}`}`;
+
                     return (
                       <div key={index} className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <img src={item.img || item.image} alt={item.title || item.name} className="w-12 h-12 object-cover rounded-xl bg-gray-50 border border-gray-100 shrink-0" />
+                          <img src={imageSrc} alt={item.title || item.name} className="w-12 h-12 object-cover rounded-xl bg-gray-50 border border-gray-100 shrink-0" />
                           <div>
                             <h3 className="text-xs font-bold text-gray-900 line-clamp-1">{item.title || item.name}</h3>
                             <p className="text-[11px] text-gray-400 mt-0.5">${Number(rawPrice).toFixed(2)} each</p>

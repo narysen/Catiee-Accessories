@@ -20,6 +20,12 @@ export default function ProductCard({ product, addToCart, user }) {
     });
   };
 
+  // Helper to resolve local vs cloud/external image paths correctly
+  const rawImage = product.img || product.image;
+  const imageSrc = rawImage?.startsWith('http')
+    ? rawImage
+    : `${import.meta.env.BASE_URL}${rawImage?.startsWith('Image/') ? rawImage : `Image/${rawImage}`}`;
+
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition hover:shadow-lg">
       <Link to={`/product/${product.id}`} state={{ product }} className="aspect-square w-full overflow-hidden bg-gray-50 relative">
@@ -28,7 +34,7 @@ export default function ProductCard({ product, addToCart, user }) {
             {product.badge}
           </span>
         )}
-        <img src={product.img || product.image} alt={product.title || product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        <img src={imageSrc} alt={product.title || product.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       </Link>
       
       <div className="flex flex-grow flex-col p-5">
