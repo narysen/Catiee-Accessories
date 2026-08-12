@@ -84,7 +84,7 @@ export default function ManageProducts() {
     setLoading(true);
 
     try {
-      let imageUrl = imageBase64 || formData.img;
+      let imageUrl = imageBase64 ? imageBase64 : formData.img;
 
       const productPayload = {
         ...formData,
@@ -172,7 +172,7 @@ export default function ManageProducts() {
         <div>
           <button 
             onClick={handleOpenAddModal}
-            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-xl text-sm transition shadow-sm"
+            className="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-xl text-sm transition shadow-sm cursor-pointer"
           >
             + Add New Product
           </button>
@@ -194,7 +194,7 @@ export default function ManageProducts() {
         {searchQuery && (
           <button 
             onClick={() => setSearchQuery('')}
-            className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 bg-gray-100 rounded-lg"
+            className="text-xs text-gray-400 hover:text-gray-600 px-2 py-1 bg-gray-100 rounded-lg cursor-pointer"
           >
             Clear
           </button>
@@ -219,7 +219,12 @@ export default function ManageProducts() {
               {filteredProducts.map((item) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="p-3">
-                    <img src={item.img} alt="" className="w-10 h-10 object-cover rounded-lg bg-gray-100 border" />
+                    <img 
+                      src={item.img || 'https://via.placeholder.com/150?text=No+Image'} 
+                      alt={item.title} 
+                      onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                      className="w-10 h-10 object-cover rounded-lg bg-gray-100 border" 
+                    />
                   </td>
                   <td className="p-3 font-medium text-gray-900 line-clamp-1">{item.title}</td>
                   <td className="p-3 text-pink-600 font-semibold">{item.price}</td>
@@ -230,8 +235,8 @@ export default function ManageProducts() {
                     </span>
                   </td>
                   <td className="p-3 text-right space-x-2">
-                    <button onClick={() => handleEditClick(item)} className="text-blue-600 hover:underline font-medium">Edit</button>
-                    <button onClick={() => handleDeleteProduct(item.id)} className="text-red-600 hover:underline font-medium">Delete</button>
+                    <button onClick={() => handleEditClick(item)} className="text-blue-600 hover:underline font-medium cursor-pointer">Edit</button>
+                    <button onClick={() => handleDeleteProduct(item.id)} className="text-red-600 hover:underline font-medium cursor-pointer">Delete</button>
                   </td>
                 </tr>
               ))}
@@ -253,7 +258,7 @@ export default function ManageProducts() {
               <h2 className="text-xl font-bold text-gray-900">
                 {modalMode === 'edit' ? 'Edit Product' : 'Add New Product'}
               </h2>
-              <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+              <button onClick={closeModal} className="text-gray-400 hover:text-gray-600 font-bold text-xl cursor-pointer">&times;</button>
             </div>
 
             <form onSubmit={handleSaveProduct} className="space-y-4 text-sm">
@@ -339,14 +344,14 @@ export default function ManageProducts() {
                 <button 
                   type="button" 
                   onClick={closeModal}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition text-sm"
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-semibold transition text-sm cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button 
                   type="submit" 
                   disabled={loading}
-                  className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl font-semibold transition text-sm shadow-sm"
+                  className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-3 rounded-xl font-semibold transition text-sm shadow-sm cursor-pointer"
                 >
                   {loading ? 'Saving...' : modalMode === 'edit' ? 'Update Product' : 'Save Product'}
                 </button>

@@ -99,12 +99,14 @@ function MainLayout({ user, userRole, handleLogout, cart, setCart, products, add
 export default function App() {
   const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(null);
+  const [loadingRole, setLoadingRole] = useState(true); // Added loading state
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      setLoadingRole(true); // Start loading when auth state changes
       if (currentUser) {
         try {
           const userDocRef = doc(db, 'users', currentUser.uid);
@@ -121,6 +123,7 @@ export default function App() {
       } else {
         setUserRole(null);
       }
+      setLoadingRole(false); // Done loading role
     });
     return () => unsubscribe();
   }, []);
@@ -158,6 +161,18 @@ export default function App() {
       return [...prevCart, { ...product, quantity: 1 }];
     });
   };
+
+  // Show a loading screen while checking authentication/roles to prevent premature redirects
+  if (loadingRole) {
+    return (
+      <div className="bg-purple-50 text-gray-800 min-h-screen flex items-center justify-center font-sans">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading Catiee Accessories...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Router>
