@@ -67,7 +67,7 @@ export default function Navbar({ user }) {
       <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 px-8 flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
           <span className="font-extrabold text-xl text-pink-600 tracking-tight cursor-pointer flex items-center gap-2.5" onClick={() => navigate("/")}>
-            <img src="/Catie.png" alt="Logo" className="w-8 h-8 object-contain rounded-xl shadow-xs" />
+            <img src={`${import.meta.env.BASE_URL}Catie.png`} alt="Logo" className="w-8 h-8 object-contain rounded-xl shadow-xs" />
             Catie Accessories
           </span>
         </div>
@@ -92,7 +92,7 @@ export default function Navbar({ user }) {
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 px-6 sm:px-8 flex items-center justify-between shadow-xs gap-4">
       <div className="flex items-center gap-2 shrink-0">
         <span className="font-extrabold text-xl text-pink-600 tracking-tight cursor-pointer flex items-center gap-2.5" onClick={() => navigate("/")}>
-          <img src="/Catie.png" alt="Logo" className="w-8 h-8 object-contain rounded-xl shadow-xs" />
+          <img src={`${import.meta.env.BASE_URL}Catie.png`} alt="Logo" className="w-8 h-8 object-contain rounded-xl shadow-xs" />
           <span className="hidden sm:inline">Catie Accessories</span>
         </span>
       </div>

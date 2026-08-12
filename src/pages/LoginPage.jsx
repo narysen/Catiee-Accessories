@@ -266,8 +266,12 @@ export default function LoginPage() {
                     type="button"
                     onClick={handleOpenGoogleMapsPicker}
                     className="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center gap-1 focus:outline-none transition"
+                    title="Pick on Map"
                   >
-                    <span>📍</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z" />
+                    </svg>
                   </button>
                 </div>
                 <input
@@ -369,8 +373,10 @@ export default function LoginPage() {
               ></iframe>
 
               <div className="absolute inset-0 pointer-events-none flex items-center justify-center pb-6">
-                <div className="text-3xl filter drop-shadow-md animate-bounce">
-                  <span>&#xf3c5;</span>
+                <div className="text-pink-600 filter drop-shadow-md animate-bounce">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-10 h-10">
+                    <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 10-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                  </svg>
                 </div>
               </div>
             </div>
