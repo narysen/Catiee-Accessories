@@ -15,6 +15,16 @@ export default function PostDetailPage({ products = [], addToCart, user }) {
 
   const [authErrorPopup, setAuthErrorPopup] = useState(false);
 
+  // Helper to fix image paths for GitHub Pages subpath vs local
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return '';
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
+    return `${import.meta.env.BASE_URL}${cleanPath}`;
+  };
+
   if (!product) {
     return (
       <div className="text-center py-20">
@@ -26,7 +36,8 @@ export default function PostDetailPage({ products = [], addToCart, user }) {
     );
   }
 
-  const productImage = product.img || product.image || product.imgUrl || product.imageUrl || product.thumbnail || '';
+  const rawProductImage = product.img || product.image || product.imgUrl || product.imageUrl || product.thumbnail || '';
+  const productImage = getImageUrl(rawProductImage);
 
   const relatedProducts = safeProducts.filter(
     (item) => item.cat === product.cat && String(item.id) !== String(product.id)
@@ -87,7 +98,9 @@ export default function PostDetailPage({ products = [], addToCart, user }) {
           <h3 className="text-xl font-bold text-gray-900">You Might Also Like</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {relatedProducts.map((item) => {
-              const itemImage = item.img || item.image || item.imgUrl || item.imageUrl || item.thumbnail || '';
+              const rawItemImage = item.img || item.image || item.imgUrl || item.imageUrl || item.thumbnail || '';
+              const itemImage = getImageUrl(rawItemImage);
+              
               return (
                 <div key={item.id} className="group flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition hover:shadow-lg">
                   <Link 

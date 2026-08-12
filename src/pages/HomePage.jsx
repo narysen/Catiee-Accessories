@@ -23,6 +23,16 @@ export default function HomePage({ products = [], addToCart, user }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchQuery]);
 
+  // Helper to fix image paths for GitHub Pages subpath vs local
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return '';
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
+    return `${import.meta.env.BASE_URL}${cleanPath}`;
+  };
+
   const filteredProducts = searchQuery.trim() === '' 
     ? products.slice(0, 4) 
     : products.filter(item => 
@@ -66,7 +76,12 @@ export default function HomePage({ products = [], addToCart, user }) {
             </div>
           </div>
           <div className="flex-1 flex justify-center">
-            <img src="/Catie.png" alt="Catie Logo" className="w-full max-w-md rounded-[30px] object-cover" />
+            {/* Fixed static logo asset path */}
+            <img 
+              src={`${import.meta.env.BASE_URL}Catie.png`} 
+              alt="Catie Logo" 
+              className="w-full max-w-md rounded-[30px] object-cover" 
+            />
           </div>
         </div>
       </header>
@@ -88,30 +103,35 @@ export default function HomePage({ products = [], addToCart, user }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 md:gap-8">
-            {filteredProducts.map((item) => (
-              <div key={item.id} className="group flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition hover:shadow-lg">
-                <Link to={`/product/${item.id}`} state={{ product: item }} className="aspect-square w-full overflow-hidden bg-gray-50 relative">
-                  {item.badge && <span className="absolute top-3 left-3 z-10 rounded-full bg-gray-900 px-2.5 py-1 text-xs font-semibold text-white">{item.badge}</span>}
-                  <img src={item.img} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </Link>
-                <div className="flex flex-grow flex-col p-5 justify-between space-y-4">
-                  <div>
-                    <Link to={`/product/${item.id}`} state={{ product: item }}>
-                      <h3 className="text-md font-bold text-gray-900 line-clamp-1">{item.title}</h3>
-                      <span className="text-sm font-semibold text-pink-600 mt-1 block">{item.price}</span>
-                    </Link>
+            {filteredProducts.map((item) => {
+              const rawImage = item.img || item.image || item.imgUrl || item.imageUrl || item.thumbnail || '';
+              const itemImage = getImageUrl(rawImage);
+
+              return (
+                <div key={item.id} className="group flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition hover:shadow-lg">
+                  <Link to={`/product/${item.id}`} state={{ product: item }} className="aspect-square w-full overflow-hidden bg-gray-50 relative">
+                    {item.badge && <span className="absolute top-3 left-3 z-10 rounded-full bg-gray-900 px-2.5 py-1 text-xs font-semibold text-white">{item.badge}</span>}
+                    <img src={itemImage} alt={item.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  </Link>
+                  <div className="flex flex-grow flex-col p-5 justify-between space-y-4">
+                    <div>
+                      <Link to={`/product/${item.id}`} state={{ product: item }}>
+                        <h3 className="text-md font-bold text-gray-900 line-clamp-1">{item.title}</h3>
+                        <span className="text-sm font-semibold text-pink-600 mt-1 block">{item.price}</span>
+                      </Link>
+                    </div>
+                    {addToCart && (
+                      <button 
+                        onClick={() => handleAddToCartClick(item)}
+                        className="w-full bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold py-3 px-4 rounded-xl transition text-xs shadow-xs flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        Add to Cart
+                      </button>
+                    )}
                   </div>
-                  {addToCart && (
-                    <button 
-                      onClick={() => handleAddToCartClick(item)}
-                      className="w-full bg-pink-50 hover:bg-pink-100 text-pink-600 font-semibold py-3 px-4 rounded-xl transition text-xs shadow-xs flex items-center justify-center gap-2 cursor-pointer"
-                    >
-                      Add to Cart
-                    </button>
-                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

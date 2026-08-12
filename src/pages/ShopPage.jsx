@@ -18,6 +18,18 @@ export default function ShopPage({ products = [], addToCart, user }) {
     }
   }, [location.search]);
 
+  // Helper to fix image paths for GitHub Pages subpath vs local
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return '';
+    // If it's an external URL (like http/https), return as is
+    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+      return imgPath;
+    }
+    // Clean leading slashes and append Vite BASE_URL
+    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
+    return `${import.meta.env.BASE_URL}${cleanPath}`;
+  };
+
   // Ensure products is a valid array and filter out any dummy logo placeholders if needed
   const safeProducts = Array.isArray(products) ? products : [];
 
@@ -68,7 +80,8 @@ export default function ShopPage({ products = [], addToCart, user }) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((item) => {
-            const itemImage = item.img || item.image || item.imgUrl || item.imageUrl || item.thumbnail || '';
+            const rawImage = item.img || item.image || item.imgUrl || item.imageUrl || item.thumbnail || '';
+            const itemImage = getImageUrl(rawImage);
             
             return (
               <div 
