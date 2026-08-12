@@ -40,6 +40,15 @@ export default function ManageProducts() {
     fetchProducts();
   }, []);
 
+  const getImageUrl = (imgPath) => {
+    if (!imgPath) return '';
+    if (imgPath.startsWith('data:') || imgPath.startsWith('http')) {
+      return imgPath;
+    }
+    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
+    return `${import.meta.env.BASE_URL}${cleanPath}`;
+  };
+
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -220,9 +229,11 @@ export default function ManageProducts() {
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="p-3">
                     <img 
-                      src={item.img || 'https://via.placeholder.com/150?text=No+Image'} 
+                      src={getImageUrl(item.img)} 
                       alt={item.title} 
-                      onError={(e) => { e.target.src = 'https://via.placeholder.com/150?text=No+Image'; }}
+                      onError={(e) => { 
+                        e.target.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="%23cbd5e1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>'; 
+                      }}
                       className="w-10 h-10 object-cover rounded-lg bg-gray-100 border" 
                     />
                   </td>
@@ -316,7 +327,7 @@ export default function ManageProducts() {
                 <label className="block text-gray-600 font-medium mb-1">Product Image File</label>
                 <div className="flex items-center gap-4">
                   {(imageBase64 || formData.img) && (
-                    <img src={imageBase64 || formData.img} alt="Current" className="w-14 h-14 object-cover rounded-xl border bg-gray-100 shrink-0" />
+                    <img src={imageBase64 || getImageUrl(formData.img)} alt="Current" className="w-14 h-14 object-cover rounded-xl border bg-gray-100 shrink-0" />
                   )}
                   <input 
                     type="file" 
