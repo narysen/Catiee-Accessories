@@ -18,11 +18,14 @@ export default function ShopPage({ products = [], addToCart, user }) {
     }
   }, [location.search]);
 
-  // Helper to fix image paths for GitHub Pages subpath vs local
+  // Helper to fix image paths for GitHub Pages subpath vs local (supports Base64 & external URLs)
   const getImageUrl = (imgPath) => {
     if (!imgPath) return '';
-    // If it's an external URL (like http/https), return as is
-    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+    if (
+      imgPath.startsWith('data:image/') || 
+      imgPath.startsWith('http://') || 
+      imgPath.startsWith('https://')
+    ) {
       return imgPath;
     }
     // Clean leading slashes and append Vite BASE_URL

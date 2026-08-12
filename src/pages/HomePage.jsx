@@ -23,10 +23,14 @@ export default function HomePage({ products = [], addToCart, user }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchQuery]);
 
-  // Helper to fix image paths for GitHub Pages subpath vs local
+  // Helper to fix image paths for GitHub Pages subpath vs local (supports Base64 & external URLs)
   const getImageUrl = (imgPath) => {
     if (!imgPath) return '';
-    if (imgPath.startsWith('http://') || imgPath.startsWith('https://')) {
+    if (
+      imgPath.startsWith('data:image/') || 
+      imgPath.startsWith('http://') || 
+      imgPath.startsWith('https://')
+    ) {
       return imgPath;
     }
     const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;

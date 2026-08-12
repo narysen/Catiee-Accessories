@@ -26,7 +26,12 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="aspect-square bg-gray-50 rounded-2xl overflow-hidden flex items-center justify-center">
-            <img src="/Catie.png" alt="Catie Accessories Brand" className="w-full h-full object-cover" />
+            {/* Fixed static asset path for GitHub Pages subpath */}
+            <img 
+              src={`${import.meta.env.BASE_URL}Catie.png`} 
+              alt="Catie Accessories Brand" 
+              className="w-full h-full object-cover" 
+            />
           </div>
         </div>
 
