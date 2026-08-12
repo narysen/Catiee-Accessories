@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { auth, db } from './lib/firebaseClients';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
@@ -34,7 +34,7 @@ function MainLayout({ user, userRole, handleLogout, cart, setCart, products, add
   const totalCartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   // Show shopping bag ONLY on Home ('/'), Shop ('/shop'), and Product Detail pages ('/product/:id')
-  const isHomePage = location.pathname === '/';
+  const isHomePage = location.pathname === '/' || location.pathname === '';
   const isShopPage = location.pathname === '/shop';
   const isProductDetail = location.pathname.startsWith('/product/');
   const showShoppingBag = isHomePage || isShopPage || isProductDetail;
@@ -160,7 +160,7 @@ export default function App() {
   };
 
   return (
-    <Router basename={import.meta.env.BASE_URL}>
+    <Router>
       <MainLayout 
         user={user}
         userRole={userRole}
