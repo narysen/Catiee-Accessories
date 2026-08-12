@@ -8,6 +8,8 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('products');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+  const logoUrl = `${import.meta.env.BASE_URL}Catie.png`;
+
   return (
     <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar Navigation */}
@@ -17,7 +19,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img 
-                src="/Catie.png" 
+                src={logoUrl} 
                 alt="Catie Accessories Logo" 
                 className="w-9 h-9 object-contain rounded-xl shadow-xs" 
               />
@@ -120,7 +122,7 @@ export default function AdminDashboard() {
             )}
             
             <div className="flex items-center gap-2 md:hidden">
-              <img src="/Catie.png" alt="Logo" className="w-7 h-7 object-contain" />
+              <img src={logoUrl} alt="Logo" className="w-7 h-7 object-contain" />
               <span className="font-bold text-gray-900 text-sm">Catie Admin</span>
             </div>
           </div>
