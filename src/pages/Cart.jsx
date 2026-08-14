@@ -2,20 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { db } from '../lib/firebaseClients';
 import { doc, getDoc } from 'firebase/firestore';
-import { getImageUrl } from '../utils/imageUtils'; // <--- Import helper
+import { getImageUrl } from '../utils/imageUtils';
 
 export default function Cart({ cart, setCart, user }) {
   const [shippingName, setShippingName] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [mapOpen, setMapOpen] = useState(false);
-  const [selectedCoords] = useState({ lat: 11.5564, lng: 104.9282 }); // Default Phnom Penh
+  const [selectedCoords] = useState({ lat: 11.5564, lng: 104.9282 });
   const [geocoding, setGeocoding] = useState(false);
   
   const [modal, setModal] = useState({ show: false, title: '', message: '', type: 'success', onConfirm: null });
   const navigate = useNavigate();
 
-  // Auto-load user profile details (Name, Phone, Address) from Firestore upon login
   useEffect(() => {
     const fetchUserProfile = async () => {
       if (user) {
@@ -25,8 +24,6 @@ export default function Cart({ cart, setCart, user }) {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            console.log("Firestore User Data Loaded:", userData);
-
             if (userData.name || userData.fullName) setShippingName(userData.name || userData.fullName);
             if (userData.phone) setPhone(userData.phone);
             
@@ -34,8 +31,6 @@ export default function Cart({ cart, setCart, user }) {
             if (savedAddress) {
               setAddress(savedAddress);
             }
-          } else {
-            console.log("No user document found in Firestore for UID:", user.uid);
           }
         } catch (error) {
           console.error("Error fetching user profile data:", error);
@@ -135,7 +130,7 @@ export default function Cart({ cart, setCart, user }) {
         <div className="max-w-3xl mx-auto space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold text-gray-800">Choose Delivery Location</h2>
-            <button onClick={() => setMapOpen(false)} className="text-sm text-pink-600 font-semibold cursor-pointer"> Back to Cart</button>
+            <button onClick={() => setMapOpen(false)} className="text-sm text-pink-600 font-semibold cursor-pointer">Back to Cart</button>
           </div>
           <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-4">
             <div className="w-full h-96 rounded-xl overflow-hidden border border-gray-200">
@@ -152,7 +147,6 @@ export default function Cart({ cart, setCart, user }) {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] py-8 px-4 sm:px-6 relative text-gray-800">
-      
       {modal.show && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-xs p-4">
           <div className="bg-white rounded-2xl shadow-lg max-w-sm w-full p-5 text-center space-y-3 border border-gray-100">
@@ -207,18 +201,18 @@ export default function Cart({ cart, setCart, user }) {
             </Link>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-12 gap-5 items-start">
+          <form onSubmit={handleProceedToPayment} id="checkout-form" className="space-y-5">
             
-            {/* Left Column: Unified Single Panel (Shipping Details FIRST, then Review Items) */}
-            <div className="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200/80 space-y-5">
+            {/* Single Box: Shipping Details & Review Items */}
+            <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200/80 space-y-5">
               
-              {/* Section 1: Shipping Details Form */}
+              {/* Shipping Details Section */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Shipping Details</h2>
                 </div>
 
-                <form onSubmit={handleProceedToPayment} id="checkout-form" className="space-y-3">
+                <div className="space-y-3">
                   <div className="grid sm:grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <label className="text-[11px] text-gray-500">Full Name</label>
@@ -260,12 +254,12 @@ export default function Cart({ cart, setCart, user }) {
                       className="w-full bg-white border border-gray-200 px-3 py-2 rounded-xl text-xs focus:outline-none focus:border-pink-500 resize-none"
                     ></textarea>
                   </div>
-                </form>
+                </div>
               </div>
 
               <hr className="border-gray-100" />
 
-              {/* Section 2: Bag Items */}
+              {/* Review Items Section */}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <h2 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Review Items ({cart.length})</h2>
@@ -277,8 +271,6 @@ export default function Cart({ cart, setCart, user }) {
                     let rawPrice = item.price;
                     if (typeof rawPrice === 'string') rawPrice = parseFloat(rawPrice.replace(/[^0-9.-]+/g, ""));
                     const itemSubtotal = (isNaN(rawPrice) ? 0 : rawPrice * qty).toFixed(2);
-
-                    // Use getImageUrl helper for safe path resolution on GitHub Pages
                     const imageSrc = getImageUrl(item.img || item.image);
 
                     return (
@@ -292,16 +284,15 @@ export default function Cart({ cart, setCart, user }) {
                         </div>
 
                         <div className="flex items-center gap-3">
-                          {/* Qty controls */}
                           <div className="flex items-center border border-gray-200 rounded-lg bg-gray-50/50 overflow-hidden">
-                            <button onClick={() => handleDecrease(index)} className="px-2 py-1 text-gray-500 hover:bg-gray-100 text-xs font-bold cursor-pointer">-</button>
+                            <button type="button" onClick={() => handleDecrease(index)} className="px-2 py-1 text-gray-500 hover:bg-gray-100 text-xs font-bold cursor-pointer">-</button>
                             <span className="px-2 text-xs font-medium text-gray-800">{qty}</span>
-                            <button onClick={() => handleIncrease(index)} className="px-2 py-1 text-gray-500 hover:bg-gray-100 text-xs font-bold cursor-pointer">+</button>
+                            <button type="button" onClick={() => handleIncrease(index)} className="px-2 py-1 text-gray-500 hover:bg-gray-100 text-xs font-bold cursor-pointer">+</button>
                           </div>
 
                           <span className="text-xs font-bold text-gray-900 w-14 text-right">${itemSubtotal}</span>
 
-                          <button onClick={() => handleRemoveItem(index)} className="text-gray-300 hover:text-red-500 text-xs font-bold transition cursor-pointer p-1" title="Remove">
+                          <button type="button" onClick={() => handleRemoveItem(index)} className="text-gray-300 hover:text-red-500 text-xs font-bold transition cursor-pointer p-1" title="Remove">
                             ✕
                           </button>
                         </div>
@@ -313,42 +304,39 @@ export default function Cart({ cart, setCart, user }) {
 
             </div>
 
-            {/* Right Column: Clean Sticky Summary Card */}
-            <div className="lg:col-span-5 sticky top-5">
-              <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-200/80 space-y-4">
-                <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">Order Summary</h2>
+            {/* Separate Bottom Box: Order Summary & Proceed Button */}
+            <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200/80 space-y-4">
+              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">Order Summary</h2>
 
-                <div className="space-y-2 text-xs text-gray-500">
-                  <div className="flex justify-between">
-                    <span>Bag Subtotal</span>
-                    <span className="font-medium text-gray-800">${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Shipping Fee</span>
-                    <span className="font-medium text-gray-800">${shippingFee.toFixed(2)}</span>
-                  </div>
+              <div className="space-y-2 text-xs text-gray-500">
+                <div className="flex justify-between">
+                  <span>Bag Subtotal</span>
+                  <span className="font-medium text-gray-800">${subtotal.toFixed(2)}</span>
                 </div>
-
-                <div className="pt-2 border-t border-gray-100 flex justify-between items-center text-sm font-bold text-gray-900">
-                  <span>Total Amount</span>
-                  <span className="text-pink-600 text-base">${totalPrice}</span>
+                <div className="flex justify-between">
+                  <span>Shipping Fee</span>
+                  <span className="font-medium text-gray-800">${shippingFee.toFixed(2)}</span>
                 </div>
+              </div>
 
-                <button 
-                  type="submit" 
-                  form="checkout-form"
-                  className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 rounded-xl transition shadow-sm text-xs cursor-pointer"
-                >
-                  Proceed to Payment (${totalPrice})
-                </button>
+              <div className="pt-2 border-t border-gray-100 flex justify-between items-center text-sm font-bold text-gray-900">
+                <span>Total Amount</span>
+                <span className="text-pink-600 text-base">${totalPrice}</span>
+              </div>
 
-                <div className="text-center pt-1">
-                  <span className="text-[10px] text-gray-400">Powered by Catiee Accessories</span>
-                </div>
+              <button 
+                type="submit" 
+                className="w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-3 rounded-xl transition shadow-sm text-xs cursor-pointer"
+              >
+                Proceed to Payment (${totalPrice})
+              </button>
+
+              <div className="text-center pt-1">
+                <span className="text-[10px] text-gray-400">Powered by Catiee Accessories</span>
               </div>
             </div>
 
-          </div>
+          </form>
         )}
 
       </div>
