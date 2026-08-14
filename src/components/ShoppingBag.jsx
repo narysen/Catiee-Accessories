@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getImageUrl } from '../utils/imageUtils'; 
 
 export default function ShoppingBag({ cart, setCart, isOpen, onClose }) {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function ShoppingBag({ cart, setCart, isOpen, onClose }) {
           return newQty > 0 ? { ...item, quantity: newQty } : null;
         }
         return item;
-      }).filter(Boolean); // Remove items if quantity drops below 1
+      }).filter(Boolean); 
     });
   };
 
@@ -65,46 +66,51 @@ export default function ShoppingBag({ cart, setCart, isOpen, onClose }) {
                   Your shopping bag is empty.
                 </div>
               ) : (
-                cart.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-4 bg-gray-50/60 rounded-2xl border border-gray-100 items-center">
-                    <img 
-                      src={item.image || item.img} 
-                      alt={item.name || item.title} 
-                      className="w-16 h-16 object-cover rounded-xl border border-gray-200" 
-                    />
-                    <div className="flex-1">
-                      <h4 className="font-bold text-gray-900 text-sm line-clamp-1">{item.name || item.title}</h4>
-                      <span className="text-pink-600 font-semibold text-xs mt-0.5 block">
-                        {typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : item.price}
-                      </span>
-                      
-                      {/* Quantity Controls */}
-                      <div className="flex items-center gap-3 mt-2">
-                        <div className="flex items-center border border-gray-200 rounded-lg bg-white shadow-2xs">
+                cart.map((item) => {
+                  // Use the helper function here
+                  const imageSrc = getImageUrl(item.image || item.img);
+
+                  return (
+                    <div key={item.id} className="flex gap-4 p-4 bg-gray-50/60 rounded-2xl border border-gray-100 items-center">
+                      <img 
+                        src={imageSrc} 
+                        alt={item.name || item.title} 
+                        className="w-16 h-16 object-cover rounded-xl border border-gray-200" 
+                      />
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 text-sm line-clamp-1">{item.name || item.title}</h4>
+                        <span className="text-pink-600 font-semibold text-xs mt-0.5 block">
+                          {typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : item.price}
+                        </span>
+                        
+                        {/* Quantity Controls */}
+                        <div className="flex items-center gap-3 mt-2">
+                          <div className="flex items-center border border-gray-200 rounded-lg bg-white shadow-2xs">
+                            <button 
+                              onClick={() => updateQuantity(item.id, -1)}
+                              className="px-2.5 py-0.5 text-gray-600 hover:bg-gray-100 rounded-l-lg cursor-pointer text-xs"
+                            >
+                              -
+                            </button>
+                            <span className="px-3 text-xs font-bold text-gray-800">{item.quantity || 1}</span>
+                            <button 
+                              onClick={() => updateQuantity(item.id, 1)}
+                              className="px-2.5 py-0.5 text-gray-600 hover:bg-gray-100 rounded-r-lg cursor-pointer text-xs"
+                            >
+                              +
+                            </button>
+                          </div>
                           <button 
-                            onClick={() => updateQuantity(item.id, -1)}
-                            className="px-2.5 py-0.5 text-gray-600 hover:bg-gray-100 rounded-l-lg cursor-pointer text-xs"
+                            onClick={() => removeItem(item.id)}
+                            className="text-xs text-gray-400 hover:text-red-500 font-medium transition cursor-pointer"
                           >
-                            -
-                          </button>
-                          <span className="px-3 text-xs font-bold text-gray-800">{item.quantity || 1}</span>
-                          <button 
-                            onClick={() => updateQuantity(item.id, 1)}
-                            className="px-2.5 py-0.5 text-gray-600 hover:bg-gray-100 rounded-r-lg cursor-pointer text-xs"
-                          >
-                            +
+                            Remove
                           </button>
                         </div>
-                        <button 
-                          onClick={() => removeItem(item.id)}
-                          className="text-xs text-gray-400 hover:text-red-500 font-medium transition cursor-pointer"
-                        >
-                          Remove
-                        </button>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AuthPopup from '../components/AuthPopup';
-
+import { getImageUrl } from '../utils/imageUtils';
 export default function HomePage({ products = [], addToCart, user }) {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
@@ -22,20 +22,6 @@ export default function HomePage({ products = [], addToCart, user }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [searchQuery]);
-
-  // Helper to fix image paths for GitHub Pages subpath vs local (supports Base64 & external URLs)
-  const getImageUrl = (imgPath) => {
-    if (!imgPath) return '';
-    if (
-      imgPath.startsWith('data:image/') || 
-      imgPath.startsWith('http://') || 
-      imgPath.startsWith('https://')
-    ) {
-      return imgPath;
-    }
-    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
-    return `${import.meta.env.BASE_URL}${cleanPath}`;
-  };
 
   const filteredProducts = searchQuery.trim() === '' 
     ? products.slice(0, 4) 
@@ -80,9 +66,9 @@ export default function HomePage({ products = [], addToCart, user }) {
             </div>
           </div>
           <div className="flex-1 flex justify-center">
-            {/* Fixed static logo asset path */}
+            {/* Fixed static logo asset path using getImageUrl */}
             <img 
-              src={`${import.meta.env.BASE_URL}Catie.png`} 
+              src={getImageUrl('Catie.png')} 
               alt="Catie Logo" 
               className="w-full max-w-md rounded-[30px] object-cover" 
             />

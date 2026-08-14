@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { db } from '../lib/firebaseClients';
 import { doc, getDoc } from 'firebase/firestore';
+import { getImageUrl } from '../utils/imageUtils'; // <--- Import helper
 
 export default function Cart({ cart, setCart, user }) {
   const [shippingName, setShippingName] = useState('');
@@ -277,11 +278,8 @@ export default function Cart({ cart, setCart, user }) {
                     if (typeof rawPrice === 'string') rawPrice = parseFloat(rawPrice.replace(/[^0-9.-]+/g, ""));
                     const itemSubtotal = (isNaN(rawPrice) ? 0 : rawPrice * qty).toFixed(2);
 
-                    // Image path handling safety matching your other updates
-                    const rawImage = item.img || item.image;
-                    const imageSrc = rawImage?.startsWith('http')
-                      ? rawImage
-                      : `${import.meta.env.BASE_URL}${rawImage?.startsWith('Image/') ? rawImage : `Image/${rawImage}`}`;
+                    // Use getImageUrl helper for safe path resolution on GitHub Pages
+                    const imageSrc = getImageUrl(item.img || item.image);
 
                     return (
                       <div key={index} className="py-3 first:pt-0 last:pb-0 flex items-center justify-between gap-3">

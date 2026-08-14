@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '../lib/firebaseClients';
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, or } from 'firebase/firestore';
+import { getImageUrl } from '../utils/imageUtils'; // <--- Import helper
 
 export default function ProfilePage({ user }) {
   const navigate = useNavigate();
@@ -167,7 +168,7 @@ export default function ProfilePage({ user }) {
     );
   }
 
-if (loading) {
+  if (loading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-pink-200 border-t-pink-500 animate-spin"></div>
@@ -493,10 +494,13 @@ if (loading) {
                   if (typeof rawPrice === 'string') rawPrice = parseFloat(rawPrice.replace(/[^0-9.-]+/g, ""));
                   const itemTotal = (isNaN(rawPrice) ? 0 : rawPrice * qty).toFixed(2);
 
+                  // Use getImageUrl helper for safe path resolution on GitHub Pages
+                  const imageSrc = getImageUrl(item.img || item.image);
+
                   return (
                     <div key={idx} className="py-2.5 flex items-center justify-between text-xs gap-3">
                       <div className="flex items-center gap-2.5">
-                        <img src={item.img || item.image} alt="" className="w-10 h-10 object-cover rounded-xl bg-gray-100 border shrink-0" />
+                        <img src={imageSrc} alt="" className="w-10 h-10 object-cover rounded-xl bg-gray-100 border shrink-0" />
                         <div>
                           <p className="font-bold text-gray-900 line-clamp-1">{item.title || item.name}</p>
                           <p className="text-[11px] text-gray-400">Qty: {qty} × ${Number(rawPrice).toFixed(2)}</p>

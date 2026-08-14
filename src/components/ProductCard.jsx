@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AuthPopup from '../components/AuthPopup';
+import { getImageUrl } from '../utils/imageUtils';
 
 export default function ProductCard({ product, addToCart, user }) {
   const [authErrorPopup, setAuthErrorPopup] = useState(false);
@@ -20,11 +22,8 @@ export default function ProductCard({ product, addToCart, user }) {
     });
   };
 
-  // Helper to resolve local vs cloud/external image paths correctly
-  const rawImage = product.img || product.image;
-  const imageSrc = rawImage?.startsWith('http')
-    ? rawImage
-    : `${import.meta.env.BASE_URL}${rawImage?.startsWith('Image/') ? rawImage : `Image/${rawImage}`}`;
+  const rawImage = product.img || product.image || '';
+  const imageSrc = getImageUrl(rawImage);
 
   return (
     <div className="group relative flex flex-col overflow-hidden rounded-xl bg-white border border-gray-100 shadow-sm transition hover:shadow-lg">

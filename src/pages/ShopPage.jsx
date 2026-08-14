@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AuthPopup from '../components/AuthPopup';
+import { getImageUrl } from '../utils/imageUtils';
 
 export default function ShopPage({ products = [], addToCart, user }) {
   const location = useLocation();
@@ -17,21 +18,6 @@ export default function ShopPage({ products = [], addToCart, user }) {
       setSearchQuery('');
     }
   }, [location.search]);
-
-  // Helper to fix image paths for GitHub Pages subpath vs local (supports Base64 & external URLs)
-  const getImageUrl = (imgPath) => {
-    if (!imgPath) return '';
-    if (
-      imgPath.startsWith('data:image/') || 
-      imgPath.startsWith('http://') || 
-      imgPath.startsWith('https://')
-    ) {
-      return imgPath;
-    }
-    // Clean leading slashes and append Vite BASE_URL
-    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
-    return `${import.meta.env.BASE_URL}${cleanPath}`;
-  };
 
   // Ensure products is a valid array and filter out any dummy logo placeholders if needed
   const safeProducts = Array.isArray(products) ? products : [];

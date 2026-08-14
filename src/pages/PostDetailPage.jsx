@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import AuthPopup from '../components/AuthPopup';
+import { getImageUrl } from '../utils/imageUtils';
 
 export default function PostDetailPage({ products = [], addToCart, user }) {
   const location = useLocation();
@@ -14,20 +15,6 @@ export default function PostDetailPage({ products = [], addToCart, user }) {
   const product = productFromState || safeProducts.find((p) => String(p.id) === String(id));
 
   const [authErrorPopup, setAuthErrorPopup] = useState(false);
-
-  // Helper to fix image paths for GitHub Pages subpath vs local (supports Base64 & external URLs)
-  const getImageUrl = (imgPath) => {
-    if (!imgPath) return '';
-    if (
-      imgPath.startsWith('data:image/') || 
-      imgPath.startsWith('http://') || 
-      imgPath.startsWith('https://')
-    ) {
-      return imgPath;
-    }
-    const cleanPath = imgPath.startsWith('/') ? imgPath.slice(1) : imgPath;
-    return `${import.meta.env.BASE_URL}${cleanPath}`;
-  };
 
   if (!product) {
     return (
