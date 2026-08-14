@@ -304,7 +304,7 @@ export default function Cart({ cart, setCart, user }) {
 
             </div>
 
-            {/* Separate Bottom Box: Order Summary & Proceed Button */}
+            {/* Order Summary & Proceed Button */}
             <div className="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200/80 space-y-4">
               <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wider border-b border-gray-100 pb-3">Order Summary</h2>
 
